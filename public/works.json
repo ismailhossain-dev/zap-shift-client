@@ -1,0 +1,26 @@
+[
+  {
+    "id": 1,
+    "icon": "FaTruckFast",
+    "title": "Fast Delivery",
+    "description": "We deliver your parcels quickly and safely to your doorstep with our optimized delivery system."
+  },
+  {
+    "id": 2,
+    "icon": "FaBoxOpen",
+    "title": "Secure Packaging",
+    "description": "Your parcels are packed with extra care to ensure safety and protection during transit."
+  },
+  {
+    "id": 3,
+    "icon": "FaLocationDot",
+    "title": "Live Tracking",
+    "description": "Track your parcel in real-time and stay updated about its current location anytime."
+  },
+  {
+    "id": 4,
+    "icon": "FaHeadset",
+    "title": "24/7 Support",
+    "description": "Our support team is available 24/7 to help you with any delivery-related issues."
+  }
+]
