@@ -1,25 +1,46 @@
 import React from "react";
 import Logo from "../../../components/logo/Logo";
-import { NavLink } from "react-router";
+import { Link, NavLink } from "react-router";
+import useAuth from "../../../hooks/useAuth";
+import { toast } from "react-toastify";
+// import { toast } from "react-toastify";
 
 const Navbar = () => {
+  const { user, logOut } = useAuth();
+
+  const handleLogOut = () => {
+    logOut()
+      .then((res) => {
+        toast.success("Log Out Successful");
+        console.log(res);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  };
+
   const links = (
     <>
       <li>
-        <NavLink>Service</NavLink>
+        <NavLink to="">Services</NavLink>
       </li>
       <li>
-        <NavLink>about us</NavLink>
+        <NavLink to="">About Us</NavLink>
       </li>
       <li>
-        <NavLink to="/covarage">Covarage</NavLink>
+        <NavLink to="/send-parcel">Send Parcel</NavLink>
       </li>
       <li>
-        <NavLink>Pricing</NavLink>
+        <NavLink to="/coverage">Coverage</NavLink>
       </li>
-      <li>
-        <NavLink>Be a Rider</NavLink>
-      </li>
+
+      {user && (
+        <>
+          <li>
+            <NavLink to="/dashboard/my-parcels">My Parcels</NavLink>
+          </li>
+        </>
+      )}
     </>
   );
   return (
@@ -51,18 +72,25 @@ const Navbar = () => {
           </ul>
         </div>
         <a className="btn btn-ghost text-xl">
-          <Logo />
+          <Logo></Logo>
         </a>
       </div>
       <div className="navbar-center hidden lg:flex">
         <ul className="menu menu-horizontal px-1">{links}</ul>
       </div>
-
       <div className="navbar-end">
-        {/* theme controral */}
-
-        {/*  */}
-        <a className="btn">Button</a>
+        {user ? (
+          <a onClick={handleLogOut} className="btn">
+            Log Out
+          </a>
+        ) : (
+          <Link className="btn" to="/login">
+            Log in
+          </Link>
+        )}
+        <Link className="btn btn-primary text-black mx-4" to="/rider">
+          Be a Rider
+        </Link>
       </div>
     </div>
   );

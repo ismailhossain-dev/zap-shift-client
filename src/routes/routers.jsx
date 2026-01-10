@@ -6,6 +6,10 @@ import AuthLayout from "../layouts/AuthLayout/AuthLayout";
 import Login from "../pages/Auth/Login/Login";
 import Register from "../pages/Auth/Register/Register";
 
+import PrivateRoute from "./PrivateRoute";
+import Rider from "../pages/Rider/Rider";
+import SendParcel from "../pages/sendParcel/SendParcel";
+
 export const router = createBrowserRouter([
   {
     path: "/",
@@ -16,7 +20,24 @@ export const router = createBrowserRouter([
         element: <Home />,
       },
       {
-        path: "/covarage",
+        path: "/rider",
+        element: (
+          <PrivateRoute>
+            <Rider />
+          </PrivateRoute>
+        ),
+      },
+      {
+        path: "/send-parcel",
+        element: (
+          <PrivateRoute>
+            <SendParcel />
+          </PrivateRoute>
+        ),
+        loader: () => fetch("/serviceCenters.json").then((res) => res.json()),
+      },
+      {
+        path: "/coverage",
         element: <Coverage />,
         // location data
         loader: () => fetch("/serviceCenters.json").then((res) => res.json()),

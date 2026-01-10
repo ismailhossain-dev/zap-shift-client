@@ -4,9 +4,9 @@ import { Outlet } from "react-router";
 import authLogo from "../../assets/authImage.png";
 const AuthLayout = () => {
   return (
-    <div className="max-w-7xl mx-auto">
+    <div className="max-w-7xl  mx-auto h-full">
       <Logo />
-      <div className="flex items-center ">
+      <div className="flex items-center  ">
         <div className="flex-1">
           <Outlet />
         </div>
