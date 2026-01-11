@@ -1,13 +1,11 @@
 import React from "react";
-import { useForm } from "react-hook-form";
+import { useForm, useWatch } from "react-hook-form";
 import { useLoaderData } from "react-router";
+import Swal from "sweetalert2";
 
 const SendParcel = () => {
-  const { register, handleSubmit, watch } = useForm();
-  //react hook check
-  const handleSendParcel = (data) => {
-    console.log(data);
-  };
+  const { register, handleSubmit, control } = useForm();
+
   const ServiceCenters = useLoaderData();
   //amra ekane just map kore regions gola nivo je
   const regionsDuplicate = ServiceCenters.map((c) => c.region);
@@ -19,15 +17,88 @@ const SendParcel = () => {
   const regions = [...new Set(regionsDuplicate)];
   // console.log(regions);
   // react hook from watch eta korle jeta hobe region select korle district chole asbe
-  const senderRegion = watch("senderRegion");
+  // const senderRegion = watch("senderRegion");
 
+  //explore useMemo useCallback react hook
+  const senderRegion = useWatch({ control, name: "senderRegion" });
+  //control er mardome amra sob input filed patay ditesi
+  const receiverRegion = useWatch({ control, name: "receiverRegion" });
   // input e region select kolre district dekabe
+  //ekane fillter jegola dorkar segola nichi
   const districtsByRegion = (region) => {
     const regionDistricts = ServiceCenters.filter((c) => c.region === region);
     const districts = regionDistricts.map((d) => d.district);
     return districts;
   };
 
+  //react hook check
+  const handleSendParcel = (data) => {
+    console.log(data);
+    //most importantPricing Structure work
+
+    //checking same district naki and loop e result pabo true false
+    const isDocument = data.parcelType === "document";
+    console.log(isDocument);
+    const isSameDistrict = data.senderDistrict === data.receiverDistrict;
+    console.log(isSameDistrict);
+
+    //parsFloat korar karon holo jodi kono customer 2.5kg bolle o tar teke pay neyar jorno
+    const parcelWeight = parseFloat(data.parcelWeight);
+    let cost = 0;
+    if (isDocument) {
+      cost = isSameDistrict ? 60 : 80;
+    } else {
+      if (parcelWeight < 3) {
+        cost = isSameDistrict ? 110 : 150;
+      } else {
+        const minCharge = isSameDistrict ? 110 : 150;
+        //3kg upore gola kg 40 taka kore dithe hobe
+        const extraWeight = parcelWeight - 3;
+        const extraCharge = isSameDistrict ? extraWeight * 40 : extraWeight * 40 + 40;
+
+        cost = minCharge + extraCharge;
+      }
+    }
+    console.log("const", cost);
+
+    // sweet alert 2 use (my )
+    const swalWithBootstrapButtons = Swal.mixin({
+      customClass: {
+        confirmButton: "btn btn-success",
+        cancelButton: "btn btn-danger",
+      },
+      buttonsStyling: false,
+    });
+    swalWithBootstrapButtons
+      .fire({
+        title: " Agree with  the const ",
+        //amra alert er most important kaj hocche `${cost} taka dynamic`
+        text: `You will be charged! ${cost} taka`,
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonText: "I agree!",
+        cancelButtonText: "No, cancel!",
+        reverseButtons: true,
+      })
+      .then((result) => {
+        if (result.isConfirmed) {
+          swalWithBootstrapButtons.fire({
+            title: "Deleted!",
+            text: "Your file has been deleted.",
+            icon: "success",
+          });
+        } else if (
+          /* Read more about handling dismissals below */
+          result.dismiss === Swal.DismissReason.cancel
+        ) {
+          swalWithBootstrapButtons.fire({
+            title: "Cancelled",
+            text: "Your imaginary file is safe :)",
+            icon: "error",
+          });
+        }
+      });
+  };
   return (
     <div>
       <h2 className="text-5xl font-bold">Send A Parcel</h2>
@@ -190,7 +261,38 @@ const SendParcel = () => {
                 placeholder="Receiver Email"
               />
             </fieldset>
-
+            {/* Receiver Region */}
+            <fieldset className="fieldset">
+              <legend className="fieldset-legend">Receiver Regions</legend>
+              <select
+                {...register("receiverRegion")}
+                defaultValue="Pick a region"
+                className="select"
+              >
+                <option disabled={true}>Pick a region</option>
+                {regions.map((r, i) => (
+                  <option key={i} value={r}>
+                    {r}
+                  </option>
+                ))}
+              </select>
+            </fieldset>
+            {/* receiver district */}
+            <fieldset className="fieldset">
+              <legend className="fieldset-legend">Receiver District</legend>
+              <select
+                {...register("receiverDistrict")}
+                defaultValue="Pick a district"
+                className="select"
+              >
+                <option disabled={true}>Pick a district</option>
+                {districtsByRegion(receiverRegion).map((d, i) => (
+                  <option key={i} value={d}>
+                    {d}
+                  </option>
+                ))}
+              </select>
+            </fieldset>
             {/* Receiver Address */}
             <fieldset className="fieldset">
               <label className="label mt-4">Receiver Address</label>
