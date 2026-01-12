@@ -2,10 +2,15 @@ import React from "react";
 import { useForm, useWatch } from "react-hook-form";
 import { useLoaderData } from "react-router";
 import Swal from "sweetalert2";
+import useAxiosSecure from "../../hooks/useAxiosSecure";
+import useAuth from "../../hooks/useAuth";
 
 const SendParcel = () => {
   const { register, handleSubmit, control } = useForm();
 
+  const { user } = useAuth();
+  //useSecure hook use for api
+  const axiosSecure = useAxiosSecure();
   const ServiceCenters = useLoaderData();
   //amra ekane just map kore regions gola nivo je
   const regionsDuplicate = ServiceCenters.map((c) => c.region);
@@ -83,9 +88,14 @@ const SendParcel = () => {
       .then((result) => {
         if (result.isConfirmed) {
           swalWithBootstrapButtons.fire({
-            title: "Deleted!",
+            title: "Successful",
             text: "Your file has been deleted.",
             icon: "success",
+          });
+          //save the parcel into to the database
+          //axios diye korle json convert korthe hoy na
+          axiosSecure.post("/parcels", data).then((res) => {
+            console.log(res.data);
           });
         } else if (
           /* Read more about handling dismissals below */
@@ -163,6 +173,7 @@ const SendParcel = () => {
               <input
                 type="text"
                 {...register("senderName")}
+                defaultValue={user.displayName}
                 className="input w-full"
                 placeholder="sender Name"
               />
@@ -173,6 +184,8 @@ const SendParcel = () => {
               <input
                 type="text"
                 {...register("senderEmail")}
+                // amra ekane user er default set kore disi user er
+                defaultValue={user.email}
                 className="input w-full"
                 placeholder="sender Email"
               />

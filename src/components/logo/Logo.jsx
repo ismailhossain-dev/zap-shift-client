@@ -6,7 +6,7 @@ const Logo = () => {
     <Link to="/">
       <div className="flex items-end">
         <img src={logo} alt="" />
-        <h3 className="text-3xl font-bold -ml-4">zapShift</h3>
+        <h3 className="text-3xl font-bold -ml-4 hover:bg-transparent">zapShift</h3>
       </div>
     </Link>
   );
