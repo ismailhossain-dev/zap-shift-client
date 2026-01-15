@@ -1,6 +1,6 @@
 import React from "react";
 import { useForm, useWatch } from "react-hook-form";
-import { useLoaderData } from "react-router";
+import { useLoaderData, useNavigate } from "react-router";
 import Swal from "sweetalert2";
 import useAxiosSecure from "../../hooks/useAxiosSecure";
 import useAuth from "../../hooks/useAuth";
@@ -12,6 +12,8 @@ const SendParcel = () => {
   //useSecure hook use for api
   const axiosSecure = useAxiosSecure();
   const ServiceCenters = useLoaderData();
+  const navigate = useNavigate();
+
   //amra ekane just map kore regions gola nivo je
   const regionsDuplicate = ServiceCenters.map((c) => c.region);
   // console.log(regionsDuplicate);
@@ -65,6 +67,8 @@ const SendParcel = () => {
       }
     }
     console.log("const", cost);
+    //add kore disi data sathe cost ta and seta mongodb te save kortesi
+    data.cost = cost;
 
     // sweet alert 2 use (my )
     const swalWithBootstrapButtons = Swal.mixin({
@@ -81,7 +85,7 @@ const SendParcel = () => {
         text: `You will be charged! ${cost} taka`,
         icon: "warning",
         showCancelButton: true,
-        confirmButtonText: "I agree!",
+        confirmButtonText: "Conform and Continue Payment!",
         cancelButtonText: "No, cancel!",
         reverseButtons: true,
       })
@@ -95,16 +99,19 @@ const SendParcel = () => {
           //save the parcel into to the database
           //axios diye korle json convert korthe hoy na
           axiosSecure.post("/parcels", data).then((res) => {
-            console.log(res.data);
-          });
-        } else if (
-          /* Read more about handling dismissals below */
-          result.dismiss === Swal.DismissReason.cancel
-        ) {
-          swalWithBootstrapButtons.fire({
-            title: "Cancelled",
-            text: "Your imaginary file is safe :)",
-            icon: "error",
+            console.log("after saving data", res.data);
+            //m:63 v:8
+            //jodi res.data.insertedId take tahole alert ta dekabe
+            if (res.data.insertedId) {
+              navigate("/dashboard/my-parcels");
+              Swal.fire({
+                title: "Parcel has create, plase Pay !",
+                icon: "success",
+                draggable: true,
+                timer: 2500,
+              });
+            }
+            //
           });
         }
       });
