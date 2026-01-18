@@ -2,14 +2,14 @@ import { useQuery } from "@tanstack/react-query";
 import React from "react";
 import { useParams } from "react-router";
 import useAxiosSecure from "../../../hooks/useAxiosSecure";
-
+import Loading from "../../Loading/Loading";
 const Payment = () => {
-  //route teke id ta nisi
+  //jhankar vai code
+
+  //jhankar vai code
   const { parcelId } = useParams();
-  console.log(parcelId);
-  //axios use
   const axiosSecure = useAxiosSecure();
-  //tanstack query use and w:query function
+
   const { isLoading, data: parcel } = useQuery({
     queryKey: ["parcels", parcelId],
     queryFn: async () => {
@@ -17,20 +17,8 @@ const Payment = () => {
       return res.data;
     },
   });
-  console.log(parcel);
 
-  //loading set
-  if (isLoading) {
-    return (
-      <div className="min-h-[80vh] flex items-center justify-center">
-        <span className="loading loading-infinite loading-xl"></span>
-      </div>
-    );
-  }
-
-  // payment work stripe and tanstack query
   const handlePayment = async () => {
-    // amra backend ki ki use korsi seta ekane ditesi backend teke deke
     const paymentInfo = {
       cost: parcel.cost,
       parcelId: parcel._id,
@@ -38,17 +26,60 @@ const Payment = () => {
       parcelName: parcel.parcelName,
     };
 
-    const res = await axiosSecure.post("/create-checkout-Session", paymentInfo);
-    //data axios teke default bave day
+    const res = await axiosSecure.post("/create-checkout-session", paymentInfo);
+
     console.log(res.data);
-    //akane navigation korle kaj korbe na ekane use korthe hobe location
+
     window.location.href = res.data.url;
   };
+
+  if (isLoading) {
+    return (
+      <div>
+        <span className="loading loading-infinity loading-xl"></span>
+      </div>
+    );
+  }
+
+  // const { parcelId } = useParams();
+  // const axiosSecure = useAxiosSecure();
+
+  // //tanstack query mardome data fetch
+  // const { isLoading, data: parcel } = useQuery({
+  //   queryKey: ["parcels", parcelId],
+  //   queryFn: async () => {
+  //     const res = await axiosSecure.get(`/parcels/${parcelId}`);
+  //     return res.data;
+  //   },
+  // });
+  // console.log(parcel);
+
+  // const handlePayment = async () => {
+  //   const paymentInfo = {
+  //     cost: parcel.cost,
+  //     parcelId: parcel._id,
+  //     senderEmail: parcel.senderEmail,
+  //     parcelName: parcel.parcelName,
+  //   };
+
+  //   console.log("cheek payment info", paymentInfo);
+  //   //paymentInfo data golo backend pataitesi ekane access korar jorno
+  //   const res = await axiosSecure.post("/create-checkout-session", paymentInfo);
+
+  //   console.log(res.data);
+  //   if (res.data.url) {
+  //     window.location.href = res.data.url;
+  //   }
+  // };
+
+  // if (isLoading) {
+  //   return <Loading />;
+  // }
 
   return (
     <div>
       <h2>
-        Please Pay for ${parcel.cost} : {parcel.parcelName}{" "}
+        Please Pay ${parcel.cost} for : {parcel.parcelName}{" "}
       </h2>
       <button onClick={handlePayment} className="btn btn-primary text-black">
         Pay

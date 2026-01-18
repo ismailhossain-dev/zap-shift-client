@@ -6,6 +6,7 @@ import useAxiosSecure from "../../hooks/useAxiosSecure";
 import useAuth from "../../hooks/useAuth";
 
 const SendParcel = () => {
+  //react-hook-form setup
   const { register, handleSubmit, control } = useForm();
 
   const { user } = useAuth();
@@ -14,13 +15,13 @@ const SendParcel = () => {
   const ServiceCenters = useLoaderData();
   const navigate = useNavigate();
 
-  //amra ekane just map kore regions gola nivo je
+  //ekane ServiceCenter teke just Region ta amra nitesi
   const regionsDuplicate = ServiceCenters.map((c) => c.region);
   // console.log(regionsDuplicate);
 
   //eta korle just name ekbar  takbe je
   // const regions = new Set(regionsDuplicate);
-  //duplicate region na asar jorno eta korsi
+  //ekanne amra region duplicate off kortesi and regions take array te convert kortese
   const regions = [...new Set(regionsDuplicate)];
   // console.log(regions);
   // react hook from watch eta korle jeta hobe region select korle district chole asbe
@@ -31,9 +32,12 @@ const SendParcel = () => {
   //control er mardome amra sob input filed patay ditesi
   const receiverRegion = useWatch({ control, name: "receiverRegion" });
   // input e region select kolre district dekabe
-  //ekane fillter jegola dorkar segola nichi
+  //amara ekane just ditrict and region gola neyar jorno function ta kortesi
+
   const districtsByRegion = (region) => {
+    //getting region filter form service center
     const regionDistricts = ServiceCenters.filter((c) => c.region === region);
+    //getting district from regionDistricts
     const districts = regionDistricts.map((d) => d.district);
     return districts;
   };
@@ -46,6 +50,7 @@ const SendParcel = () => {
     //checking same district naki and loop e result pabo true false
     const isDocument = data.parcelType === "document";
     console.log(isDocument);
+    //ekane amra dektsi je sender and reciver er address ta same naki
     const isSameDistrict = data.senderDistrict === data.receiverDistrict;
     console.log(isSameDistrict);
 
@@ -54,13 +59,18 @@ const SendParcel = () => {
     let cost = 0;
     if (isDocument) {
       cost = isSameDistrict ? 60 : 80;
+      //isDocument jodi tik na hoy tahole else if kaj korbe
     } else {
       if (parcelWeight < 3) {
         cost = isSameDistrict ? 110 : 150;
-      } else {
+      }
+
+      //ekane jodi non document parcel 3 kg  hoy and jodi sameDistrict hoy tahole 110  and 3kg besi hoy 150 taka
+      else {
         const minCharge = isSameDistrict ? 110 : 150;
-        //3kg upore gola kg 40 taka kore dithe hobe
+        //ekane amra parcelWeight teke 3kg kg - korsi and 3kg uporer poti kg 40 taka kore
         const extraWeight = parcelWeight - 3;
+        //ekane first jodi 4kg hoy tahole ekane hisabe hobe 1kg *40 = 40 2kg*4=80 and amra upore amra extraWeight kore 3 kg - disi
         const extraCharge = isSameDistrict ? extraWeight * 40 : extraWeight * 40 + 40;
 
         cost = minCharge + extraCharge;
@@ -158,6 +168,7 @@ const SendParcel = () => {
               placeholder="Parcel Name"
             />
           </fieldset>
+          {/* Parcel Weight */}
           <fieldset className="fieldset">
             <label className="label">Parcel Weight (kg)</label>
             <input

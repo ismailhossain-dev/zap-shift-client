@@ -1,6 +1,7 @@
 import React from "react";
 import { Link, NavLink, Outlet } from "react-router";
 import { CiDeliveryTruck } from "react-icons/ci";
+import { FaUsers } from "react-icons/fa";
 const DashboardLayout = () => {
   return (
     // ekane daisyUi dashboard use kortesi
@@ -66,7 +67,18 @@ const DashboardLayout = () => {
               </Link>
             </li>
             {/* Our dashboard links */}
+            {/**Users link */}
 
+            <li>
+              <NavLink
+                className="is-drawer-close:tooltip is-drawer-close:tooltip-right"
+                data-tip="Users Management"
+                to="/dashboard/users-management"
+              >
+                <FaUsers></FaUsers>
+                <span className="is-drawer-close:hidden">Users Management</span>
+              </NavLink>
+            </li>
             {/* List item */}
             <li>
               {/* ekane class name ta holo button click korle menu hide hoyar jorno */}

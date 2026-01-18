@@ -14,6 +14,7 @@ import MyParcels from "../pages/DashBoard/MyParcels/MyParcels";
 import Payment from "../pages/DashBoard/Payment/Payment";
 import PaymentSuccess from "../pages/DashBoard/Payment/PaymentSuccess";
 import PaymentCancel from "../pages/DashBoard/Payment/PaymentCancel";
+import UsersManagement from "../pages/DashBoard/UsersManagement/UsersManagement";
 
 export const router = createBrowserRouter([
   {
@@ -77,6 +78,7 @@ export const router = createBrowserRouter([
         path: "my-parcels",
         element: <MyParcels />,
       },
+      // manush ekta nirdisto product er upor pay korbe tai amra payment:/parcelId add korse
       {
         path: "payment/:parcelId",
         element: <Payment />,
@@ -88,6 +90,10 @@ export const router = createBrowserRouter([
       {
         path: "payment-canceled",
         element: <PaymentCancel />,
+      },
+      {
+        path: "users-management",
+        element: <UsersManagement />,
       },
     ],
   },

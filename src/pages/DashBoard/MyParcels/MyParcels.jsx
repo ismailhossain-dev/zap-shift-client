@@ -26,10 +26,12 @@ const MyParcels = () => {
   });
   console.log(parcels);
 
-  //delete
+  //myParcel delete again try id madome
   const handleParcelDelete = (id) => {
-    console.log(id);
-    //sweet alert
+    //just amra eta korle id peye jabo and amra id parcel teke paisi paramiter amra jeta mon chai seta dite parbo amra to paraiter acesskortesi delete button teke and amra parametter name sabbir diye o access korthe parbo
+    console.log("getting id", id);
+    //sweet alert 2
+
     Swal.fire({
       title: "Are you sure?",
       text: "You won't be able to revert this!",
@@ -40,14 +42,15 @@ const MyParcels = () => {
       confirmButtonText: "Yes, delete it!",
     }).then((result) => {
       if (result.isConfirmed) {
-        //delate send parcel data
+        // id ta astese holo button teke and amra parameter e access kore _id ke id convert korsi
         axiosSecure.delete(`/parcels/${id}`).then((res) => {
-          console.log("my parcel data delete", res.data);
+          console.log(res.data);
 
-          //amra delete alert dekabo jokon deletedCount 1 hobe
+          //jdo res.data te deleteCount  1 add koe tahole nicher alert ta dekebe
           if (res.data.deletedCount) {
-            //reload deya chara delete er jorno refetch use korsi
+            // refresh the data in the ui
             refetch();
+
             Swal.fire({
               title: "Deleted!",
               text: "Your parcel request has been deleted.",
@@ -58,23 +61,23 @@ const MyParcels = () => {
       }
     });
   };
-
-  //new stripe work
+  //my stipe payment handle function
+  //amra ekane tanstack quey teke data ta nisi
   const handlePayment = async (parcel) => {
-    //backend jeta lagbe seta seta ditesi
     const paymentInfo = {
       cost: parcel.cost,
       parcelId: parcel._id,
       senderEmail: parcel.senderEmail,
       parcelName: parcel.parcelName,
     };
-    //paymentInfo data gola backend e patary divo
-    const res = await axiosSecure.post("/payment-checkout-session", paymentInfo);
 
-    //data axios teke default vabe ase
-    // console.log(res.data.url);
+    //amra backend e  payment info ta pataitesi
+    const res = await axiosSecure.post("/payment-checkout-session", paymentInfo);
+    //data ta tanstack query teke automatic ase
     console.log(res.data.url);
-    //ekane usenavigation kore payment page jaythe parbo na tai use korhte window.location.href = res.data.url ekane error ditese je sejorno href use kori nai amra use korsi assign
+    //window location er mardome amra payment page jaytesi
+    //eta korle warning ditese tai amra assign use kortesi
+    // window.location.href = res.data.url;
     window.location.assign(res.data.url);
   };
 
@@ -104,22 +107,26 @@ const MyParcels = () => {
                 <td>{parcel.parcelName}</td>
                 <td>{parcel.cost}</td>
                 <td>
+                  {/* first amra backend stripe take updata koresi  */}
+                  {/* stipe teke paymentStatus Paid hoy tahole paid dekabe */}
                   {parcel.paymentStatus === "paid" ? (
                     <span className="text-green-400">Paid</span>
                   ) : (
-                    // Dynamic route and payment page e niye jabe
-                    //old
-                    // <Link to={`/dashboard/payment/${parcel._id}`}>
-                    //   <button className="btn btn-primary btn-sm text-black">Pay</button>
-                    // </Link>
-
-                    //new api
+                    //amra ekane teke parcel take patai detesi
                     <button
                       onClick={() => handlePayment(parcel)}
                       className="btn btn-primary btn-sm text-black"
                     >
                       Pay
                     </button>
+
+                    //new api
+                    // <button
+                    //   onClick={() => handlePayment(parcel)}
+                    //   className="btn btn-primary btn-sm text-black"
+                    // >
+                    //   Pay
+                    // </button>
                   )}
                 </td>
                 <td>{parcel.deliveryStatus}</td>
@@ -134,6 +141,7 @@ const MyParcels = () => {
                     <FaRegEdit />
                   </button>
                   {/* Delete icon */}
+                  {/* amra ekane parcel teke id ta diye dilam */}
                   <button
                     onClick={() => handleParcelDelete(parcel._id)}
                     className="btn btn-square hover:btn-primary"
