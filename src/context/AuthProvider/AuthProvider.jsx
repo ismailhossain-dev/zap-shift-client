@@ -29,6 +29,7 @@ const AuthProvider = ({ children }) => {
     return signInWithEmailAndPassword(auth, email, password);
   };
 
+  //update use mardome amra name set kore dithe pari
   const updateUserProfile = (profile) => {
     return updateProfile(auth.currentUser, profile);
   };
@@ -37,10 +38,12 @@ const AuthProvider = ({ children }) => {
     return signOut(auth);
   };
   //observe use state
+  //jokon use Sokichu tik set hoye jabe tokon setLoading false hoye jabe
   useEffect(() => {
     const unSubscribe = onAuthStateChanged(auth, (currentUser) => {
       setUser(currentUser);
       setLoading(false);
+      console.log(currentUser);
     });
     return () => {
       unSubscribe();

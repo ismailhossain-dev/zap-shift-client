@@ -3,6 +3,7 @@ import { MapContainer, Marker, Popup, TileLayer } from "react-leaflet";
 import "leaflet/dist/leaflet.css";
 import { useLoaderData } from "react-router";
 
+//react-leaflet map
 const Coverage = () => {
   // Default map center (Bangladesh center)
   //bangadesh map address
@@ -19,7 +20,7 @@ const Coverage = () => {
     const location = e.target.location.value;
 
     const district = serviceCenters.find((c) =>
-      c.district.toLowerCase().includes(location.toLowerCase())
+      c.district.toLowerCase().includes(location.toLowerCase()),
     );
 
     if (district) {

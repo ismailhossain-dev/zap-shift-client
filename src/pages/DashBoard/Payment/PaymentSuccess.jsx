@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useSearchParams } from "react-router";
 import useAxiosSecure from "../../../hooks/useAxiosSecure";
 
@@ -6,6 +6,8 @@ const PaymentSuccess = () => {
   //useSearchPrams eta react router hook eta diye amra amder project er url ta access kori
   const [searchParams] = useSearchParams();
   const axiosSecure = useAxiosSecure();
+  //state vitore amra set korsi transactionId and tracking id set korar jorno
+  const [paymentInfo, setPaymentInfo] = useState({});
   //session_id ta astese url te ? mark er pore session_id ta ase and pora link ta astese success-url amra ekta dynamic link disilam tai
 
   //basically amra session_id ta antesi user ke track korar jorno
@@ -20,9 +22,18 @@ const PaymentSuccess = () => {
       // payment-success backend ta pataitesi
       //?session_id= ta title url teke
       //egola korar pore amader ke ekta backend session id dive
-      axiosSecure.patch(`/payment-success?session_id=${sessionId}`).then((res) => {
-        console.log(res);
-      });
+      axiosSecure
+        .patch(`/payment-success?session_id=${sessionId}`)
+
+        .then((res) => {
+          //res er madome backend data gola dekabe jemon transectionId trackingId
+          console.log("hello pera", res.data);
+          //res.data teke ja ja kichu lage seta nitesi
+          setPaymentInfo({
+            transactionId: res.data.transactionId,
+            trackingId: res.data.trackingId,
+          });
+        });
     }
     //dependency hobe amra useEffect ja kichu niye kaj korsi segola dependency vitore dithe hobe
   }, [sessionId, axiosSecure]);
@@ -30,6 +41,8 @@ const PaymentSuccess = () => {
     <div>
       {/* h2.text-4xl${Payment Successful} */}
       <h2 className="text-4xl1">Payment Successful</h2>
+      <p>Your TransactionId: {paymentInfo.transactionId}</p>
+      <p>Your Parcel Tracking id: {paymentInfo.trackingId} </p>
     </div>
   );
 };

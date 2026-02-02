@@ -2,6 +2,7 @@ import React from "react";
 import { Link, NavLink, Outlet } from "react-router";
 import { CiDeliveryTruck } from "react-icons/ci";
 import { FaUsers } from "react-icons/fa";
+import { ImCreditCard } from "react-icons/im";
 const DashboardLayout = () => {
   return (
     // ekane daisyUi dashboard use kortesi
@@ -91,6 +92,19 @@ const DashboardLayout = () => {
                 <CiDeliveryTruck />
                 {/* span jet korsi seta korle dashboard menu hidden hole text dekabe na */}
                 <span className="is-drawer-close:hidden">My Parcels</span>
+              </NavLink>
+            </li>
+            <li>
+              {/* ekane class name ta holo button click korle menu hide hoyar jorno */}
+              <NavLink
+                className="is-drawer-close:tooltip is-drawer-close:tooltip-right"
+                data-tip="Payment History"
+                to="/dashboard/payment-history"
+              >
+                {/* dashboard hidden hobe icon ta dekabe */}
+                <ImCreditCard />
+                {/* span jet korsi seta korle dashboard menu hidden hole text dekabe na */}
+                <span className="is-drawer-close:hidden">Payment History</span>
               </NavLink>
             </li>
             <li>

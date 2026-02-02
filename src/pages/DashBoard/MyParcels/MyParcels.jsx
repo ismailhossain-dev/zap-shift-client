@@ -71,6 +71,7 @@ const MyParcels = () => {
       parcelName: parcel.parcelName,
     };
 
+    console.log(paymentInfo);
     //amra backend e  payment info ta pataitesi
     const res = await axiosSecure.post("/payment-checkout-session", paymentInfo);
     //data ta tanstack query teke automatic ase

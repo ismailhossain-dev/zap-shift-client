@@ -11,10 +11,10 @@ import Rider from "../pages/Rider/Rider";
 import SendParcel from "../pages/sendParcel/SendParcel";
 import DashboardLayout from "../layouts/DashboardLayout";
 import MyParcels from "../pages/DashBoard/MyParcels/MyParcels";
-import Payment from "../pages/DashBoard/Payment/Payment";
 import PaymentSuccess from "../pages/DashBoard/Payment/PaymentSuccess";
 import PaymentCancel from "../pages/DashBoard/Payment/PaymentCancel";
 import UsersManagement from "../pages/DashBoard/UsersManagement/UsersManagement";
+import PaymentHistory from "../pages/DashBoard/PaymentHistory/PaymentHistory";
 
 export const router = createBrowserRouter([
   {
@@ -79,10 +79,7 @@ export const router = createBrowserRouter([
         element: <MyParcels />,
       },
       // manush ekta nirdisto product er upor pay korbe tai amra payment:/parcelId add korse
-      {
-        path: "payment/:parcelId",
-        element: <Payment />,
-      },
+
       {
         path: "payment-success",
         element: <PaymentSuccess />,
@@ -94,6 +91,10 @@ export const router = createBrowserRouter([
       {
         path: "users-management",
         element: <UsersManagement />,
+      },
+      {
+        path: "payment-history",
+        element: <PaymentHistory />,
       },
     ],
   },
