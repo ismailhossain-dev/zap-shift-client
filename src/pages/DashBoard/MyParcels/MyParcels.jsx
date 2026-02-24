@@ -19,12 +19,12 @@ const MyParcels = () => {
     queryKey: ["my-parcels", user.email],
     queryFn: async () => {
       const res = await axiosSecure.get(`/parcels?email=${user.email}`);
-      console.log(res);
+      // console.log(res);
       // axios default vabe data name dey
       return res.data;
     },
   });
-  console.log(parcels);
+  // console.log(parcels);
 
   //myParcel delete again try id madome
   const handleParcelDelete = (id) => {

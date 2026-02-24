@@ -1,137 +1,129 @@
 import React from "react";
 import { Link, NavLink, Outlet } from "react-router";
 import { CiDeliveryTruck } from "react-icons/ci";
-import { FaUsers } from "react-icons/fa";
+import { FaUsers, FaHome, FaCog } from "react-icons/fa";
 import { ImCreditCard } from "react-icons/im";
+import useAuth from "../hooks/useAuth";
+import Logo from "../components/logo/Logo";
+
 const DashboardLayout = () => {
+  const { user } = useAuth();
+
   return (
-    // ekane daisyUi dashboard use kortesi
-    <div className="drawer lg:drawer-open max-w-7xl mx-auto">
+    <div className="drawer lg:drawer-open bg-base-100 font-sans ">
       <input id="my-drawer-4" type="checkbox" className="drawer-toggle" />
-      <div className="drawer-content">
-        {/* Navbar */}
-        <nav className="navbar w-full bg-base-300">
-          <label
-            htmlFor="my-drawer-4"
-            aria-label="open sidebar"
-            className="btn btn-square btn-ghost"
-          >
-            {/* Sidebar toggle icon */}
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              viewBox="0 0 24 24"
-              strokeLinejoin="round"
-              strokeLinecap="round"
-              strokeWidth="2"
-              fill="none"
-              stroke="currentColor"
-              className="my-1.5 inline-block size-4"
-            >
-              <path d="M4 4m0 2a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v12a2 2 0 0 1 -2 2h-12a2 2 0 0 1 -2 -2z"></path>
-              <path d="M9 4v16"></path>
-              <path d="M14 10l2 2l-2 2"></path>
-            </svg>
-          </label>
-          <div className="px-4">Zap Shift Dashboard</div>
+
+      <div className="drawer-content flex flex-col bg-slate-50/50">
+        {/* Modern Navbar */}
+        <nav className="navbar w-full bg-white border-b border-gray-100 px-4 sticky top-0 z-10 backdrop-blur-md bg-white/80">
+          <div className="flex-none lg:hidden">
+            <label htmlFor="my-drawer-4" className="btn btn-square btn-ghost">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                className="inline-block w-6 h-6 stroke-current"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth="2"
+                  d="M4 6h16M4 12h16M4 18h16"
+                ></path>
+              </svg>
+            </label>
+          </div>
+          <div className="flex-1 px-2 mx-2 font-bold text-xl tracking-tight text-primary">
+            Zap <span className="text-gray-800 font-extrabold uppercase">Shift</span>
+          </div>
+          <div className="flex-none hidden lg:block">
+            {/* Profile/Notification placeholder can go here */}
+            <div className="avatar placeholder btn btn-ghost btn-circle">
+              <div className="bg-neutral text-neutral-content rounded-full w-8">
+                <img src={user.photoURL} alt="" />
+              </div>
+            </div>
+          </div>
         </nav>
-        {/* Page content here */}
-        <Outlet />
+
+        {/* Dynamic Page Content */}
+        <main className="p-4 md:p-8">
+          <div className="max-w-6xl mx-auto">
+            <Outlet />
+          </div>
+        </main>
       </div>
 
-      <div className="drawer-side is-drawer-close:overflow-visible">
+      {/* Sidebar Design */}
+      <div className="drawer-side z-20 shadow-xl">
         <label htmlFor="my-drawer-4" aria-label="close sidebar" className="drawer-overlay"></label>
-        <div className="flex min-h-full flex-col items-start bg-base-200 is-drawer-close:w-14 is-drawer-open:w-64">
-          {/* Sidebar content here */}
-          <ul className="menu w-full grow">
-            {/* List item */}
+        <div className="min-h-full bg-white w-64 md:w-72 flex flex-col border-r border-gray-100">
+          {/* Sidebar Logo Area */}
+          <div className="w-full">
+            <Link to="/" className="flex items-center gap-3 no-underline">
+              <div className="bg-primary mt-3 pb-2 pr-3 rounded-xl text-white">
+                <Logo />
+              </div>
+            </Link>
+          </div>
+
+          <div className="px-4 mb-4 text-[10px] font-bold text-gray-400 uppercase tracking-widest">
+            Main Menu
+          </div>
+
+          {/* Navigation Links */}
+          <ul className="menu px-4 gap-2 text-base-content grow">
             <li>
-              <Link
+              <NavLink
                 to="/"
-                className="is-drawer-close:tooltip is-drawer-close:tooltip-right"
-                data-tip="Homepage"
+                className={({ isActive }) =>
+                  `flex items-center gap-4 py-3 px-4 rounded-xl transition-all duration-200 font-medium ${isActive ? "bg-primary text-white shadow-md shadow-primary/20" : "hover:bg-gray-100 text-gray-600"}`
+                }
               >
-                {/* Home icon */}
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  viewBox="0 0 24 24"
-                  strokeLinejoin="round"
-                  strokeLinecap="round"
-                  strokeWidth="2"
-                  fill="none"
-                  stroke="currentColor"
-                  className="my-1.5 inline-block size-4"
-                >
-                  <path d="M15 21v-8a1 1 0 0 0-1-1h-4a1 1 0 0 0-1 1v8"></path>
-                  <path d="M3 10a2 2 0 0 1 .709-1.528l7-5.999a2 2 0 0 1 2.582 0l7 5.999A2 2 0 0 1 21 10v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
-                </svg>
-                <span className="is-drawer-close:hidden">Homepage</span>
-              </Link>
+                <FaHome className="text-lg" /> Homepage
+              </NavLink>
             </li>
-            {/* Our dashboard links */}
-            {/**Users link */}
 
             <li>
               <NavLink
-                className="is-drawer-close:tooltip is-drawer-close:tooltip-right"
-                data-tip="Users Management"
                 to="/dashboard/users-management"
+                className={({ isActive }) =>
+                  `flex items-center gap-4 py-3 px-4 rounded-xl transition-all duration-200 font-medium ${isActive ? "bg-primary text-white shadow-md shadow-primary/20" : "hover:bg-gray-100 text-gray-600"}`
+                }
               >
-                <FaUsers></FaUsers>
-                <span className="is-drawer-close:hidden">Users Management</span>
+                <FaUsers className="text-lg" /> Users Management
               </NavLink>
             </li>
-            {/* List item */}
+
             <li>
-              {/* ekane class name ta holo button click korle menu hide hoyar jorno */}
               <NavLink
-                className="is-drawer-close:tooltip is-drawer-close:tooltip-right"
-                data-tip="MyParcels"
                 to="/dashboard/my-parcels"
+                className={({ isActive }) =>
+                  `flex items-center gap-4 py-3 px-4 rounded-xl transition-all duration-200 font-medium ${isActive ? "bg-primary text-white shadow-md shadow-primary/20" : "hover:bg-gray-100 text-gray-600"}`
+                }
               >
-                {/* dashboard hidden hobe icon ta dekabe */}
-                <CiDeliveryTruck />
-                {/* span jet korsi seta korle dashboard menu hidden hole text dekabe na */}
-                <span className="is-drawer-close:hidden">My Parcels</span>
+                <CiDeliveryTruck className="text-xl font-bold" /> My Parcels
               </NavLink>
             </li>
+
             <li>
-              {/* ekane class name ta holo button click korle menu hide hoyar jorno */}
               <NavLink
-                className="is-drawer-close:tooltip is-drawer-close:tooltip-right"
-                data-tip="Payment History"
                 to="/dashboard/payment-history"
+                className={({ isActive }) =>
+                  `flex items-center gap-4 py-3 px-4 rounded-xl transition-all duration-200 font-medium ${isActive ? "bg-primary text-white shadow-md shadow-primary/20" : "hover:bg-gray-100 text-gray-600"}`
+                }
               >
-                {/* dashboard hidden hobe icon ta dekabe */}
-                <ImCreditCard />
-                {/* span jet korsi seta korle dashboard menu hidden hole text dekabe na */}
-                <span className="is-drawer-close:hidden">Payment History</span>
+                <ImCreditCard className="text-lg" /> Payment History
               </NavLink>
-            </li>
-            <li>
-              <button
-                className="is-drawer-close:tooltip is-drawer-close:tooltip-right"
-                data-tip="Settings"
-              >
-                {/* Settings icon */}
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  viewBox="0 0 24 24"
-                  strokeLinejoin="round"
-                  strokeLinecap="round"
-                  strokeWidth="2"
-                  fill="none"
-                  stroke="currentColor"
-                  className="my-1.5 inline-block size-4"
-                >
-                  <path d="M20 7h-9"></path>
-                  <path d="M14 17H5"></path>
-                  <circle cx="17" cy="17" r="3"></circle>
-                  <circle cx="7" cy="7" r="3"></circle>
-                </svg>
-                <span className="is-drawer-close:hidden">Settings</span>
-              </button>
             </li>
           </ul>
+
+          {/* Footer Sidebar */}
+          <div className="p-4 border-t border-gray-50">
+            <button className="flex items-center gap-4 w-full py-3 px-4 rounded-xl hover:bg-red-50 text-red-500 transition-all font-medium">
+              <FaCog /> Settings
+            </button>
+          </div>
         </div>
       </div>
     </div>

@@ -18,20 +18,36 @@ const Navbar = () => {
         console.log(error);
       });
   };
-
+  const activeStyle = ({ isActive }) =>
+    isActive
+      ? "bg-indigo-600 text-white px-5 py-2 rounded-xl shadow-lg shadow-indigo-200 transition-all duration-300"
+      : "text-slate-600 hover:text-indigo-600 hover:bg-indigo-50 px-5 py-2 rounded-xl transition-all duration-300";
   const links = (
     <>
       <li>
-        <NavLink to="">Services</NavLink>
+        <NavLink className={activeStyle} to="">
+          Services
+        </NavLink>
       </li>
       <li>
-        <NavLink to="">About Us</NavLink>
+        <NavLink className={activeStyle} to="">
+          About Us
+        </NavLink>
       </li>
       <li>
-        <NavLink to="/send-parcel">Send Parcel</NavLink>
+        <NavLink className={activeStyle} to="/send-parcel">
+          Send Parcel
+        </NavLink>
       </li>
       <li>
-        <NavLink to="/coverage">Coverage</NavLink>
+        <NavLink className={activeStyle} to="/rider">
+          Be a Rider
+        </NavLink>
+      </li>
+      <li>
+        <NavLink className={activeStyle} to="/coverage">
+          Coverage
+        </NavLink>
       </li>
 
       {user && (

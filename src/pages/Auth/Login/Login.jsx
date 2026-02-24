@@ -9,7 +9,7 @@ const Login = () => {
   //p-2 v:9
   const location = useLocation();
   const navigate = useNavigate();
-  console.log("in the login page", location);
+  // console.log("in the login page", location);
   const { signInUser } = useAuth(); //auth ta ekane ase
   const {
     register,

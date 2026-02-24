@@ -1,18 +1,37 @@
 import { toast } from "react-toastify";
 import useAuth from "../../../hooks/useAuth";
 import { useLocation, useNavigate } from "react-router";
+import useAxiosSecure from "../../../hooks/useAxiosSecure";
 
 const SocialLogin = () => {
   const { signInGoogle } = useAuth();
   //google diye use login korle ride page e niye jabe
   const location = useLocation();
   const navigate = useNavigate();
-  console.log("location in social", location);
+  const axiosSecure = useAxiosSecure();
+  // console.log("location in social", location);
   const handleGoogleSignin = () => {
     signInGoogle()
       .then((result) => {
-        console.log(result.user);
+        // console.log(result.user);
         toast("Google signin successful");
+        //sava social data in database
+        const userInfo = {
+          name: result.user.displayName,
+          email: result.user.email,
+          photoURL: result.user.photoURL,
+        };
+        //send data sever
+        axiosSecure
+          .post("/users", userInfo)
+          .then((res) => {
+            console.log("social Login save data base", res.data);
+          })
+          .catch((error) => {
+            console.log("social login error", error);
+          });
+
+        console.log("Normal user save in database");
         navigate(location.state || "/");
       })
       .catch((err) => {

@@ -5,6 +5,7 @@ import { toast } from "react-toastify";
 import { Link, useLocation, useNavigate } from "react-router";
 import SocialLogin from "../SocialLogin/SocialLogin";
 import axios from "axios";
+import useAxiosSecure from "../../../hooks/useAxiosSecure";
 
 const Register = () => {
   const {
@@ -15,11 +16,12 @@ const Register = () => {
   const { registerUser, updateUserProfile } = useAuth();
   const location = useLocation();
   const navigate = useNavigate();
+  const axiosSecure = useAxiosSecure();
 
-  console.log("in register", location);
+  // console.log("in register", location);
 
   const handleRegistration = (data) => {
-    console.log("after register", data.photo[0]);
+    // console.log("after register", data.photo[0]);
     const profileImg = data.photo[0];
 
     registerUser(data.email, data.password)
@@ -36,17 +38,32 @@ const Register = () => {
         }`;
 
         axios.post(image_API_URL, formData).then((res) => {
+          const photoURL = res.data.data.url;
           console.log("after image upload", res.data.data.url);
-          console.log(res);
-          // update user profile to firebase
+          // console.log(res);
+          // update user profile to firebase set data
+          //create user in the database
+          //uporer register user teke email ta paichi
+          const userInfo = {
+            email: data.email,
+            name: data.name,
+            photoURL: photoURL,
+          };
+          //send data mongodb
+          axiosSecure.post("/users", userInfo).then((res) => {
+            if (res.data.insertedId) {
+              console.log("user create in the data register");
+            }
+          });
+
           const userProfile = {
             displayName: data.name,
-            photoURL: res.data.data.url,
+            photoURL: photoURL,
           };
 
           updateUserProfile(userProfile)
             .then(() => {
-              console.log("user profile updated done.");
+              // console.log("user profile updated done.");
               navigate(location.state || "/");
             })
             .catch((error) => {
