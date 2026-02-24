@@ -3,14 +3,14 @@ import riderImg from "../../assets/agent-pending.png";
 import { useForm, useWatch } from "react-hook-form";
 // import useAuth from "../../hooks/useAuth";
 import useAxiosSecure from "../../hooks/useAxiosSecure";
-import { useLoaderData } from "react-router";
+import { useLoaderData, useNavigate } from "react-router";
 import Swal from "sweetalert2";
 
 const Rider = () => {
   const { register, handleSubmit, control } = useForm();
   // const { user } = useAuth();
   const axiosSecure = useAxiosSecure();
-
+  const navigate = useNavigate();
   const serviceCenters = useLoaderData() || [];
   const regions = [...new Set(serviceCenters.map((c) => c.region))];
   const riderRegion = useWatch({ control, name: "riderRegion" });
@@ -22,17 +22,21 @@ const Rider = () => {
   };
 
   const handleSendParcel = (data) => {
-    console.log(data);
-    axiosSecure.post("/riders", data).then((res) => {
-      if (res.data.insertedId) {
-        Swal.fire({
-          position: "top-end",
-          title: "Your Application has bee submitted. We will reach to you in 145 days ",
-          draggable: true,
-          timer: 2000,
-        });
-      }
-    });
+    // console.log(data);
+    axiosSecure
+      .post("/riders", data)
+
+      .then((res) => {
+        if (res.data.insertedId) {
+          Swal.fire({
+            position: "top-end",
+            title: "Your Application has bee submitted. We will reach to you in 145 days ",
+            draggable: true,
+            timer: 2000,
+          });
+          navigate("/dashboard/approve-rider");
+        }
+      });
   };
 
   return (
