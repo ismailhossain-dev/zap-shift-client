@@ -116,6 +116,16 @@ const DashboardLayout = () => {
                 <ImCreditCard className="text-lg" /> Payment History
               </NavLink>
             </li>
+            <li>
+              <NavLink
+                to="/dashboard/approve-rider"
+                className={({ isActive }) =>
+                  `flex items-center gap-4 py-3 px-4 rounded-xl transition-all duration-200 font-medium ${isActive ? "bg-primary text-white shadow-md shadow-primary/20" : "hover:bg-gray-100 text-gray-600"}`
+                }
+              >
+                <ImCreditCard className="text-lg" /> Approve Rider
+              </NavLink>
+            </li>
           </ul>
 
           {/* Footer Sidebar */}

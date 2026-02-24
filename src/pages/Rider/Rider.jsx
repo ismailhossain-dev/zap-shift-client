@@ -27,9 +27,7 @@ const Rider = () => {
       if (res.data.insertedId) {
         Swal.fire({
           position: "top-end",
-
           title: "Your Application has bee submitted. We will reach to you in 145 days ",
-
           draggable: true,
           timer: 2000,
         });
