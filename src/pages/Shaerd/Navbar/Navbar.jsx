@@ -25,12 +25,12 @@ const Navbar = () => {
   const links = (
     <>
       <li>
-        <NavLink className={activeStyle} to="">
+        <NavLink className={activeStyle} to="/service">
           Services
         </NavLink>
       </li>
       <li>
-        <NavLink className={activeStyle} to="">
+        <NavLink className={activeStyle} to="/about-us">
           About Us
         </NavLink>
       </li>

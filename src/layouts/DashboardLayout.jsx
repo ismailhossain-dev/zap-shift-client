@@ -5,9 +5,11 @@ import { FaUsers, FaHome, FaCog } from "react-icons/fa";
 import { ImCreditCard } from "react-icons/im";
 import useAuth from "../hooks/useAuth";
 import Logo from "../components/logo/Logo";
+import useRole from "../hooks/useRole";
 
 const DashboardLayout = () => {
   const { user } = useAuth();
+  const { role } = useRole();
 
   return (
     <div className="drawer lg:drawer-open bg-base-100 font-sans ">
@@ -59,16 +61,13 @@ const DashboardLayout = () => {
         <label htmlFor="my-drawer-4" aria-label="close sidebar" className="drawer-overlay"></label>
         <div className="min-h-full bg-white w-64 md:w-72 flex flex-col border-r border-gray-100">
           {/* Sidebar Logo Area */}
-          <div className="w-full">
-            <Link to="/" className="flex items-center gap-3 no-underline">
-              <div className="bg-primary mt-3 pb-2 pr-3 rounded-xl text-white">
-                <Logo />
-              </div>
-            </Link>
-          </div>
+          {/* main logo */}
+          <div className="w-full flex justify-center  border-b border-gray-100">
+            {/* justify-center use kora hoyeche jate pura div-er majhkane thake */}
 
-          <div className="px-4 mb-4 text-[10px] font-bold text-gray-400 uppercase tracking-widest">
-            Main Menu
+            <Link to="/" className="flex items-center  no-underline group">
+              <Logo />
+            </Link>
           </div>
 
           {/* Navigation Links */}
@@ -81,17 +80,6 @@ const DashboardLayout = () => {
                 }
               >
                 <FaHome className="text-lg" /> Homepage
-              </NavLink>
-            </li>
-
-            <li>
-              <NavLink
-                to="/dashboard/users-management"
-                className={({ isActive }) =>
-                  `flex items-center gap-4 py-3 px-4 rounded-xl transition-all duration-200 font-medium ${isActive ? "bg-primary text-white shadow-md shadow-primary/20" : "hover:bg-gray-100 text-gray-600"}`
-                }
-              >
-                <FaUsers className="text-lg" /> Users Management
               </NavLink>
             </li>
 
@@ -116,16 +104,34 @@ const DashboardLayout = () => {
                 <ImCreditCard className="text-lg" /> Payment History
               </NavLink>
             </li>
-            <li>
-              <NavLink
-                to="/dashboard/approve-rider"
-                className={({ isActive }) =>
-                  `flex items-center gap-4 py-3 px-4 rounded-xl transition-all duration-200 font-medium ${isActive ? "bg-primary text-white shadow-md shadow-primary/20" : "hover:bg-gray-100 text-gray-600"}`
-                }
-              >
-                <ImCreditCard className="text-lg" /> Approve Rider
-              </NavLink>
-            </li>
+            {/* Admin hole dekabe list gola */}
+            {role === "admin" ? (
+              <>
+                <li>
+                  <NavLink
+                    to="/dashboard/users-management"
+                    className={({ isActive }) =>
+                      `flex items-center gap-4 py-3 px-4 rounded-xl transition-all duration-200 font-medium ${isActive ? "bg-primary text-white shadow-md shadow-primary/20" : "hover:bg-gray-100 text-gray-600"}`
+                    }
+                  >
+                    <FaUsers className="text-lg" /> Users Management
+                  </NavLink>
+                </li>
+
+                <li>
+                  <NavLink
+                    to="/dashboard/approve-rider"
+                    className={({ isActive }) =>
+                      `flex items-center gap-4 py-3 px-4 rounded-xl transition-all duration-200 font-medium ${isActive ? "bg-primary text-white shadow-md shadow-primary/20" : "hover:bg-gray-100 text-gray-600"}`
+                    }
+                  >
+                    <ImCreditCard className="text-lg" /> Approve Rider
+                  </NavLink>
+                </li>
+              </>
+            ) : (
+              ""
+            )}
           </ul>
 
           {/* Footer Sidebar */}

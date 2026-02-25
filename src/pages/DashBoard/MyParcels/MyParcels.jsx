@@ -10,8 +10,6 @@ import { Link } from "react-router";
 const MyParcels = () => {
   const { user } = useAuth();
   const axiosSecure = useAxiosSecure();
-  // tanstack query use and query function website
-  //data ta asche tanstack query teke and data name change kore disi parcels and etar default man set kore disi mt array []
 
   //refetch korsi reload deya chara delete hoyar jorno
   const { data: parcels = [], refetch } = useQuery({
