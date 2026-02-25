@@ -19,26 +19,25 @@ const UsersManagement = () => {
   //full user take data database send kortechi
   const handleMakeAdmin = (user) => {
     const roleInfo = { role: "admin" };
-    axiosSecure
-      .patch(`/users/${user._id}/role`, roleInfo)
 
-      .then((res) => {
-        console.log(res.data);
-        if (res.data.modifiedCount) {
-          refetch();
-          Swal.fire({
-            title: `${user.name}Users Marked as an  Admin`,
-            icon: "success",
-            showCancelButton: false,
-            timer: 2000,
-          });
-        }
-      });
+    axiosSecure.patch(`/users/${user._id}/role`, roleInfo).then((res) => {
+      console.log(res.data);
+      if (res.data.modifiedCount) {
+        refetch();
+        Swal.fire({
+          position: "top-end",
+          icon: "success",
+          title: `${user.displayName} marked as an Admin`,
+          showConfirmButton: false,
+          timer: 2000,
+        });
+      }
+    });
   };
 
   //admin change user admin ke click korle abr use hoye jabe
   const handleRemoveAdmin = (user) => {
-    const roleInfo = { role: "uses" };
+    const roleInfo = { role: "user" };
     axiosSecure.patch(`/users/${user._id}/role`, roleInfo).then((res) => {
       if (res.data.modifiedCount) {
         refetch();

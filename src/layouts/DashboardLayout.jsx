@@ -10,6 +10,7 @@ import useRole from "../hooks/useRole";
 const DashboardLayout = () => {
   const { user } = useAuth();
   const { role } = useRole();
+  console.log(role);
 
   return (
     <div className="drawer lg:drawer-open bg-base-100 font-sans ">

@@ -93,6 +93,7 @@ export const router = createBrowserRouter([
       },
       {
         path: "users-management",
+
         element: (
           <AdminRoute>
             <UsersManagement />
@@ -101,11 +102,12 @@ export const router = createBrowserRouter([
       },
       {
         path: "approve-rider",
-        element: (
-          <AdminRoute>
-            <ApproveRider />
-          </AdminRoute>
-        ),
+        Component: ApproveRider,
+        // element: (
+        //   <AdminRoute>
+        //     <ApproveRider />
+        //   </AdminRoute>
+        // ),
       },
       {
         path: "payment-history",
