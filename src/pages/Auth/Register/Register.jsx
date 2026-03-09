@@ -6,6 +6,7 @@ import { Link, useLocation, useNavigate } from "react-router";
 import SocialLogin from "../SocialLogin/SocialLogin";
 import axios from "axios";
 import useAxiosSecure from "../../../hooks/useAxiosSecure";
+import { FiUser, FiMail, FiLock, FiCamera, FiArrowRight } from "react-icons/fi";
 
 const Register = () => {
   const {
@@ -18,143 +19,174 @@ const Register = () => {
   const navigate = useNavigate();
   const axiosSecure = useAxiosSecure();
 
-  // console.log("in register", location);
-
   const handleRegistration = (data) => {
-    // console.log("after register", data.photo[0]);
     const profileImg = data.photo[0];
 
     registerUser(data.email, data.password)
       .then((result) => {
-        console.log(result.user);
-        toast.success("Signup Successful");
-        // 1. store the image in form data
+        toast.success("Creating your account...");
         const formData = new FormData();
         formData.append("image", profileImg);
 
-        // 2. send the photo to store and get the ul
         const image_API_URL = `https://api.imgbb.com/1/upload?key=${
           import.meta.env.VITE_image_host_key
         }`;
 
         axios.post(image_API_URL, formData).then((res) => {
           const photoURL = res.data.data.url;
-          console.log("after image upload", res.data.data.url);
-          // console.log(res);
-          // update user profile to firebase set data
-          //create user in the database
-          //uporer register user teke email ta paichi
+
           const userInfo = {
             email: data.email,
             name: data.name,
             photoURL: photoURL,
+            role: "user", // Default role
           };
-          //send data mongodb
+
           axiosSecure.post("/users", userInfo).then((res) => {
-            if (res.data.insertedId) {
-              console.log("user create in the data register");
-            }
+            const userProfile = {
+              displayName: data.name,
+              photoURL: photoURL,
+            };
+
+            updateUserProfile(userProfile)
+              .then(() => {
+                toast.success("Welcome to Zap Shift!");
+                navigate(location.state || "/");
+              })
+              .catch((error) => toast.error(error.message));
           });
-
-          const userProfile = {
-            displayName: data.name,
-            photoURL: photoURL,
-          };
-
-          updateUserProfile(userProfile)
-            .then(() => {
-              // console.log("user profile updated done.");
-              navigate(location.state || "/");
-            })
-            .catch((error) => {
-              console.log(error);
-              toast.error(error.message);
-            });
         });
       })
       .catch((error) => {
-        console.log(error);
         toast.error(error.message);
       });
   };
 
   return (
-    <div className="card bg-base-100 w-full mx-auto max-w-sm shrink-0 shadow-2xl">
-      <h3 className="text-3xl text-center">Welcome to Zap Shift</h3>
-      <p className="text-center">Please Register</p>
-      <form className="card-body" onSubmit={handleSubmit(handleRegistration)}>
-        <fieldset className="fieldset">
-          {/* name field */}
-          <label className="label">Name</label>
-          <input
-            type="text"
-            {...register("name", { required: true })}
-            className="input"
-            placeholder="Your Name"
-          />
-          {errors.name?.type === "required" && <p className="text-red-500">Name is required.</p>}
+    <div className="min-h-screen flex items-center justify-center bg-slate-50 px-4 py-12">
+      <div className="w-full max-w-lg bg-white rounded-[2.5rem] shadow-2xl shadow-indigo-100 overflow-hidden border border-slate-100">
+        {/* Header */}
+        <div className="bg-indigo-600 p-8 text-center text-white">
+          <h1 className="text-3xl font-black tracking-tight mb-2">Join Zap Shift</h1>
+          <p className="text-indigo-100">Create an account to start shipping today</p>
+        </div>
 
-          {/* photo image field */}
-          <label className="label">Photo</label>
+        <div className="p-8 md:p-10">
+          <form className="space-y-5" onSubmit={handleSubmit(handleRegistration)}>
+            {/* Name Field */}
+            <div className="space-y-1">
+              <label className="text-sm font-bold text-slate-700 ml-1">Full Name</label>
+              <div className="relative group">
+                <span className="absolute inset-y-0 left-0 pl-4 flex items-center text-slate-400 group-focus-within:text-indigo-600 transition-colors">
+                  <FiUser />
+                </span>
+                <input
+                  type="text"
+                  {...register("name", { required: "Name is required" })}
+                  className="w-full pl-11 pr-4 py-3 bg-slate-50 border border-slate-200 rounded-2xl outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 transition-all"
+                  placeholder="John Doe"
+                />
+              </div>
+              {errors.name && (
+                <p className="text-xs text-red-500 mt-1 ml-1">{errors.name.message}</p>
+              )}
+            </div>
 
-          <input
-            type="file"
-            {...register("photo", { required: true })}
-            className="file-input"
-            placeholder="Your Photo"
-          />
+            {/* Photo Field */}
+            <div className="space-y-1">
+              <label className="text-sm font-bold text-slate-700 ml-1">Profile Photo</label>
+              <div className="relative group">
+                <span className="absolute inset-y-0 left-0 pl-4 flex items-center text-slate-400 group-focus-within:text-indigo-600 transition-colors">
+                  <FiCamera />
+                </span>
+                <input
+                  type="file"
+                  {...register("photo", { required: "Photo is required" })}
+                  className="w-full pl-11 pr-4 py-2 bg-slate-50 border border-slate-200 rounded-2xl file:mr-4 file:py-1 file:px-3 file:rounded-full file:border-0 file:text-xs file:font-bold file:bg-indigo-100 file:text-indigo-700 hover:file:bg-indigo-200 cursor-pointer"
+                />
+              </div>
+              {errors.photo && (
+                <p className="text-xs text-red-500 mt-1 ml-1">{errors.photo.message}</p>
+              )}
+            </div>
 
-          {errors.name?.type === "required" && <p className="text-red-500">Photo is required.</p>}
+            {/* Email Field */}
+            <div className="space-y-1">
+              <label className="text-sm font-bold text-slate-700 ml-1">Email Address</label>
+              <div className="relative group">
+                <span className="absolute inset-y-0 left-0 pl-4 flex items-center text-slate-400 group-focus-within:text-indigo-600 transition-colors">
+                  <FiMail />
+                </span>
+                <input
+                  type="email"
+                  {...register("email", { required: "Email is required" })}
+                  className="w-full pl-11 pr-4 py-3 bg-slate-50 border border-slate-200 rounded-2xl outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 transition-all"
+                  placeholder="name@company.com"
+                />
+              </div>
+              {errors.email && (
+                <p className="text-xs text-red-500 mt-1 ml-1">{errors.email.message}</p>
+              )}
+            </div>
 
-          {/* email field */}
-          <label className="label">Email</label>
-          <input
-            type="email"
-            {...register("email", { required: true })}
-            className="input"
-            placeholder="Email"
-          />
-          {errors.email?.type === "required" && <p className="text-red-500">Email is required.</p>}
+            {/* Password Field */}
+            <div className="space-y-1">
+              <label className="text-sm font-bold text-slate-700 ml-1">Password</label>
+              <div className="relative group">
+                <span className="absolute inset-y-0 left-0 pl-4 flex items-center text-slate-400 group-focus-within:text-indigo-600 transition-colors">
+                  <FiLock />
+                </span>
+                <input
+                  type="password"
+                  {...register("password", {
+                    required: "Password is required",
+                    minLength: { value: 6, message: "At least 6 characters" },
+                    pattern: {
+                      value: /^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[^A-Za-z0-9]).+$/,
+                      message: "Must include Uppercase, Lowercase, Number & Special Character",
+                    },
+                  })}
+                  className="w-full pl-11 pr-4 py-3 bg-slate-50 border border-slate-200 rounded-2xl outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 transition-all"
+                  placeholder="••••••••"
+                />
+              </div>
+              {errors.password && (
+                <p className="text-[10px] md:text-xs text-red-500 mt-1 leading-tight ml-1 font-medium">
+                  {errors.password.message}
+                </p>
+              )}
+            </div>
 
-          {/* password */}
-          <label className="label">Password</label>
-          <input
-            type="password"
-            {...register("password", {
-              required: true,
-              minLength: 6,
-              pattern: /^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[^A-Za-z0-9]).+$/,
-            })}
-            className="input"
-            placeholder="Password"
-          />
-          {errors.password?.type === "required" && (
-            <p className="text-red-500">Password is required.</p>
-          )}
-          {errors.password?.type === "minLength" && (
-            <p className="text-red-500">Password must be 6 characters or longer</p>
-          )}
-          {errors.password?.type === "pattern" && (
-            <p className="text-red-500">
-              Password must have at least one uppercase, at least one lowercase, at least one
-              number, and at least one special characters
-            </p>
-          )}
+            {/* Submit Button */}
+            <button className="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-4 rounded-2xl shadow-lg shadow-indigo-100 flex items-center justify-center gap-2 group transition-all active:scale-[0.98] mt-4">
+              Create Account
+              <FiArrowRight className="group-hover:translate-x-1 transition-transform" />
+            </button>
+          </form>
 
-          <div>
-            <a className="link link-hover">Forgot password?</a>
+          <div className="relative my-8 text-center">
+            <span className="absolute inset-x-0 top-1/2 -translate-y-1/2 h-px bg-slate-100"></span>
+            <span className="relative bg-white px-4 text-xs font-bold text-slate-400 uppercase tracking-widest">
+              Or join with
+            </span>
           </div>
-          <button className="btn btn-neutral mt-4">Register</button>
-        </fieldset>
-        <p>
-          Already have an account{" "}
-          <Link state={location.state} className="text-blue-400 underline" to="/login">
-            Login
-          </Link>
-        </p>
-      </form>
-      <SocialLogin></SocialLogin>
+
+          <SocialLogin />
+
+          <p className="text-center text-slate-500 font-medium mt-8">
+            Already have an account?{" "}
+            <Link
+              state={location.state}
+              className="text-indigo-600 font-bold hover:underline underline-offset-4"
+              to="/login"
+            >
+              Login here
+            </Link>
+          </p>
+        </div>
+      </div>
     </div>
   );
 };
+
 export default Register;

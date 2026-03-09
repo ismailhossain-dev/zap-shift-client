@@ -17,7 +17,8 @@ import UsersManagement from "../pages/DashBoard/UsersManagement/UsersManagement"
 import PaymentHistory from "../pages/DashBoard/PaymentHistory/PaymentHistory";
 import ApproveRider from "../pages/DashBoard/ApproveRider/ApproveRider";
 import AdminRoute from "./AdminRoute";
-
+import UserDashboard from "../pages/DashBoard/UserDashboard.jsx/userDashboard";
+import About from "../pages/Home/Home/About";
 export const router = createBrowserRouter([
   {
     path: "/",
@@ -26,6 +27,10 @@ export const router = createBrowserRouter([
       {
         index: true,
         element: <Home />,
+      },
+      {
+        path: "about-us",
+        element: <About />,
       },
       {
         path: "/rider",
@@ -78,10 +83,13 @@ export const router = createBrowserRouter([
     ),
     children: [
       {
+        index: true,
+        element: <UserDashboard />,
+      },
+      {
         path: "my-parcels",
         element: <MyParcels />,
       },
-      // manush ekta nirdisto product er upor pay korbe tai amra payment:/parcelId add korse
 
       {
         path: "payment-success",
@@ -103,11 +111,6 @@ export const router = createBrowserRouter([
       {
         path: "approve-rider",
         Component: ApproveRider,
-        // element: (
-        //   <AdminRoute>
-        //     <ApproveRider />
-        //   </AdminRoute>
-        // ),
       },
       {
         path: "payment-history",
