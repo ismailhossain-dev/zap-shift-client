@@ -6,6 +6,7 @@ import { toast } from "react-toastify";
 
 const Navbar = () => {
   const { user, logOut } = useAuth();
+  console.log(user);
 
   const handleLogOut = () => {
     logOut()
@@ -108,10 +109,7 @@ const Navbar = () => {
               className="btn btn-ghost btn-circle avatar border-2 border-indigo-100 hover:border-indigo-400 transition-all"
             >
               <div className="w-10 rounded-full">
-                <img
-                  alt="User Profile"
-                  src={user?.photoURL || "https://i.ibb.co/mR9798S/user.png"}
-                />
+                <img alt="User Profile" src={user.photoURL} />
               </div>
             </div>
             <ul
@@ -119,7 +117,7 @@ const Navbar = () => {
               className="menu menu-sm dropdown-content mt-3 z-[1] p-3 shadow-2xl bg-base-100 rounded-2xl w-64 border border-slate-100"
             >
               {/* User Info Section */}
-              <li className="px-4 py-3 mb-2 bg-indigo-50 rounded-xl">
+              <li className="px-4 py-3 mb-2  rounded-xl">
                 <p className="font-bold text-indigo-700 text-base truncate">
                   {user?.displayName || "User Name"}
                 </p>

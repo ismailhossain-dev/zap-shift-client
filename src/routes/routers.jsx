@@ -17,8 +17,9 @@ import UsersManagement from "../pages/DashBoard/UsersManagement/UsersManagement"
 import PaymentHistory from "../pages/DashBoard/PaymentHistory/PaymentHistory";
 import ApproveRider from "../pages/DashBoard/ApproveRider/ApproveRider";
 import AdminRoute from "./AdminRoute";
-import UserDashboard from "../pages/DashBoard/UserDashboard.jsx/userDashboard";
+
 import About from "../pages/Home/Home/About";
+import UserDashboard from "../pages/DashBoard/UserDashboard/UserDashboard";
 export const router = createBrowserRouter([
   {
     path: "/",

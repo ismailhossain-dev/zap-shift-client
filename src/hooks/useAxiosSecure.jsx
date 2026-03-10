@@ -3,7 +3,7 @@ import React, { useEffect } from "react";
 import useAuth from "./useAuth";
 import { useNavigate } from "react-router";
 const axiosSecure = axios.create({
-  baseURL: "http://localhost:3000",
+  baseURL: "https://zap-shift-server-alpha-mauve.vercel.app",
 });
 const useAxiosSecure = () => {
   //step -1 axios Interceptors for jwt an secure
