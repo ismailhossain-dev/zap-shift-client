@@ -1,16 +1,151 @@
-# React + Vite
+# ⚡ ZapShift | Smart Delivery & Task Management Platform
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+**ZapShift** is a modern and responsive **delivery & task management web application** built with **React.js and Vite**.
+The platform helps users manage deliveries, track locations, and interact with a smooth and modern interface.
 
-Currently, two official plugins are available:
+This project focuses on **performance, scalability, and a premium user experience**.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+---
 
-## React Compiler
+# 🌐 Live Demo
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+🔗 **Live Site:** https://your-zapshift-live-link.com
+🔗 **Client Repository:** https://github.com/your-username/zap-shift-client
 
-## Expanding the ESLint configuration
+---
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+# 🚀 Key Features
+
+* ⚡ **Fast Performance with Vite** – Lightning fast development and build system.
+* 🔐 **Firebase Authentication** – Secure login and user authentication.
+* 📦 **Delivery / Task Management** – Users can manage tasks and delivery workflow easily.
+* 🗺️ **Interactive Map Integration** – Location-based features using **Leaflet & React Leaflet**.
+* 📊 **Server State Management** – Efficient data fetching using **React Query**.
+* ✨ **Smooth Animations** – Interactive UI powered by **Framer Motion**.
+* 🔔 **Real-time Notifications** – Alerts and notifications using **React Toastify & SweetAlert2**.
+* 📱 **Fully Responsive Design** – Optimized for Mobile, Tablet, and Desktop devices.
+
+---
+
+# 🛠️ Technology Stack
+
+### Frontend
+
+* **React 19**
+* **Vite**
+* **React Router**
+
+### Styling
+
+* **Tailwind CSS**
+* **DaisyUI**
+
+### Backend & Authentication
+
+* **Firebase**
+* **Firebase Admin**
+
+### Data & API
+
+* **Axios**
+* **TanStack React Query**
+
+### UI Libraries
+
+* **Lucide React**
+* **React Icons**
+* **Swiper**
+* **React Responsive Carousel**
+* **React Spinners**
+
+### Map Integration
+
+* **Leaflet**
+* **React Leaflet**
+
+---
+
+# 📦 Major Dependencies
+
+* react
+* react-dom
+* react-router
+* firebase
+* firebase-admin
+* axios
+* @tanstack/react-query
+* framer-motion
+* leaflet
+* react-leaflet
+* react-hook-form
+* react-icons
+* react-toastify
+* sweetalert2
+* swiper
+* react-responsive-carousel
+
+---
+
+# 💻 Local Setup & Installation
+
+Follow these steps to run the project locally.
+
+### 1️⃣ Clone the Repository
+
+```bash id="8uy6n3"
+git clone https://github.com/your-username/zap-shift-client.git
+```
+
+### 2️⃣ Navigate to the Project Folder
+
+```bash id="6ryb3f"
+cd zap-shift-client
+```
+
+### 3️⃣ Install Dependencies
+
+```bash id="oqypn2"
+npm install
+```
+
+### 4️⃣ Run the Development Server
+
+```bash id="9v4v0x"
+npm run dev
+```
+
+Now open your browser and visit:
+
+```id="4dfy5t"
+http://localhost:5173
+```
+
+---
+
+# 📁 Project Structure
+
+```id="9k9k0y"
+src
+ ┣ components
+ ┣ pages
+ ┣ hooks
+ ┣ routes
+ ┣ assets
+ ┣ context
+ ┣ utils
+ ┗ main.jsx
+```
+
+---
+
+# 📬 Let's Connect
+
+If you have any questions or want to collaborate on a project, feel free to reach out.
+
+📧 **Email:** [programmarsabbir@gmail.com](mailto:programmarsabbir@gmail.com)
+📱 **WhatsApp:** +8801619408991
+💼 **LinkedIn:** [Visit My Linkdin Account](https://www.linkedin.com/in/mohammad-ismail-hossain69k)
+🌐 **Portfolio:** [Visit My Portfolio](https://ismail-hossain69k.netlify.app)
+
+---
+⚙️ **Backend Repository:**  [Vist ZapShift Backend](https://github.com/ismailhossain-dev/zap-shift-backend.git)
