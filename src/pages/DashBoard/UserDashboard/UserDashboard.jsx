@@ -1,17 +1,66 @@
 import React from "react";
-import { FaBox, FaTruck, FaCheckCircle, FaClock, FaPlus, FaMapMarkerAlt } from "react-icons/fa";
+import { FaBox, FaTruck, FaCheckCircle, FaPlus, FaMapMarkerAlt, FaCreditCard } from "react-icons/fa";
 import useAuth from "../../../hooks/useAuth";
+import useAxiosSecure from "../../../hooks/useAxiosSecure";
+import { useQuery } from "@tanstack/react-query";
 
 const UserDashboard = () => {
   const { user } = useAuth();
+  const axiosSecure = useAxiosSecure();
 
-  // একজন সাধারণ ইউজারের পার্সেল সংক্রান্ত স্ট্যাটাস
+  // 1. TanStack Query (All Parcels Fetching)
+  const { data: parcels = [], isLoading: isParcelsLoading } = useQuery({
+    queryKey: ["my-parcels", user?.email],
+    enabled: !!user?.email,
+    queryFn: async () => {
+      const res = await axiosSecure.get(`/parcels?email=${user.email}`);
+      return res.data;
+    },
+  });
+
+  // 2. TanStack Query (Successful Payments Fetching)
+  const { data: payments = [], isLoading: isPaymentsLoading } = useQuery({
+    queryKey: ["payments", user?.email],
+    enabled: !!user?.email,
+    queryFn: async () => {
+      const res = await axiosSecure.get(`/payments?email=${user?.email}`);
+      return res.data;
+    },
+  });
+
+  // ডাইনামিক পার্সেল স্ট্যাটাস কাউন্টিং
+  const totalParcels = parcels.length;
+  
+  const inTransitParcels = parcels.filter(
+    (p) => p.deliveryStatus?.toLowerCase() === "in transit"
+  ).length;
+  
+  const deliveredParcels = parcels.filter(
+    (p) => p.deliveryStatus?.toLowerCase() === "delivered"
+  ).length;
+  
+  // 🛠️ ডাইনামিক ফিল্ড ট্র্যাকার (ফিল্ডের নাম price, cost, amount, বা dynamic যাই হোক না কেন ডলার হিসাব করবে)
+  const totalPaidAmount = payments.reduce((sum, payment) => {
+    const dynamicPriceField = payment.price || payment.cost || payment.amount || payment.totalPaid || 0;
+    return sum + (Number(dynamicPriceField) || 0);
+  }, 0);
+
+  // ডাইনামিক ডেটা স্ট্যাটাস অ্যারে (ডলার সাইনসহ)
   const stats = [
-    { id: 1, title: "My Total Parcels", value: "0", icon: <FaBox />, color: "from-blue-500 to-indigo-600" },
-    { id: 2, title: "Parcels In Transit", value: "0", icon: <FaTruck />, color: "from-amber-400 to-orange-500" },
-    { id: 3, title: "Successfully Delivered", value: "0", icon: <FaCheckCircle />, color: "from-emerald-400 to-green-600" },
-    { id: 4, title: "Awaiting Approval", value: "0", icon: <FaClock />, color: "from-rose-400 to-red-500" },
+    { id: 1, title: "My Total Parcels", value: totalParcels, isCurrency: false, icon: <FaBox />, color: "from-blue-500 to-indigo-600" },
+    { id: 2, title: "Parcels In Transit", value: inTransitParcels, isCurrency: false, icon: <FaTruck />, color: "from-amber-400 to-orange-500" },
+    
+    { id: 4, title: "Total Amount Paid", value: totalPaidAmount, isCurrency: true, icon: <FaCreditCard />, color: "from-purple-500 to-pink-600" },
   ];
+
+  // লোডিং স্টেট হ্যান্ডলার (ডাটা আসার আগে যেন ফাকা বা ০ না দেখায়)
+  if (isParcelsLoading || isPaymentsLoading) {
+    return (
+      <div className="min-h-screen w-full flex items-center justify-center bg-slate-50">
+        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-indigo-600"></div>
+      </div>
+    );
+  }
 
   return (
     <div className="p-4 md:p-8 lg:p-10 bg-slate-50/50 min-h-screen w-full max-w-[1400px] mx-auto space-y-8 font-sans antialiased">
@@ -32,18 +81,24 @@ const UserDashboard = () => {
       </div>
 
       {/* Stats Grid */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-6">
+      <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3
+       gap-6">
         {stats.map((stat) => (
           <div
             key={stat.id}
             className="bg-white p-6 rounded-2xl border border-slate-100/80 flex items-center gap-5 hover:shadow-xl hover:shadow-slate-100/40 transition-all duration-300 group"
           >
-            <div className={`bg-gradient-to-br ${stat.color} p-4 rounded-xl text-white text-2xl shadow-lg shadow-indigo-100/40 transform group-hover:scale-105 transition-transform`}>
+            <div className={`bg-gradient-to-br ${stat.color} p-4 rounded-xl text-white text-2xl shadow-lg transform group-hover:scale-105 transition-transform`}>
               {stat.icon}
             </div>
             <div>
               <p className="text-slate-400 text-xs font-bold uppercase tracking-wider">{stat.title}</p>
-              <h3 className="text-3xl font-black text-slate-800 mt-0.5 tracking-tight">{stat.value}</h3>
+              <h3 className="text-2xl md:text-3xl font-black text-slate-800 mt-0.5 tracking-tight">
+                {stat.isCurrency 
+                  ? `$${stat.value.toFixed(2)}` 
+                  : String(stat.value).padStart(2, '0')
+                }
+              </h3>
             </div>
           </div>
         ))}
@@ -63,36 +118,51 @@ const UserDashboard = () => {
             </div>
             
             <div className="overflow-x-auto">
-              <table className="w-full text-left border-collapse">
-                <thead>
-                  <tr className="bg-slate-50/70 text-slate-400 uppercase text-[10px] font-bold tracking-widest border-b border-slate-100">
-                    <th className="px-6 py-4">Tracking ID</th>
-                    <th className="px-6 py-4">Delivery Destination</th>
-                    <th className="px-6 py-4">Current Status</th>
-                    <th className="px-6 py-4">Order Date</th>
-                  </tr>
-                </thead>
-                <tbody className="divide-y divide-slate-100/60">
-                  {[1, 2, 3, 4].map((item) => (
-                    <tr key={item} className="hover:bg-slate-50/30 transition-colors group">
-                      <td className="px-6 py-4 font-bold text-indigo-600 text-sm group-hover:text-indigo-700 transition-colors">
-                        #ZAP-98432{item}
-                      </td>
-                      <td className="px-6 py-4 text-slate-600 text-sm font-medium">
-                        Dhaka to Chittagong
-                      </td>
-                      <td className="px-6 py-4">
-                        <span className="inline-flex items-center px-3 py-1 bg-emerald-50 text-emerald-600 rounded-full text-xs font-extrabold uppercase tracking-wide border border-emerald-100">
-                          Delivered
-                        </span>
-                      </td>
-                      <td className="px-6 py-4 text-slate-400 text-sm font-semibold">
-                        Oct 2{item}, 2026
-                      </td>
+              {parcels.length === 0 ? (
+                <div className="p-12 text-center text-slate-400 font-medium">
+                  No parcel bookings available.
+                </div>
+              ) : (
+                <table className="w-full text-left border-collapse">
+                  <thead>
+                    <tr className="bg-slate-50/70 text-slate-400 uppercase text-[10px] font-bold tracking-widest border-b border-slate-100">
+                      <th className="px-6 py-4">Tracking ID</th>
+                      <th className="px-6 py-4">Delivery Destination</th>
+                      <th className="px-6 py-4">Current Status</th>
+                      <th className="px-6 py-4">Payment</th>
                     </tr>
-                  ))}
-                </tbody>
-              </table>
+                  </thead>
+                  <tbody className="divide-y divide-slate-100/60">
+                    {parcels.slice(0, 5).map((parcel) => (
+                      <tr key={parcel._id} className="hover:bg-slate-50/30 transition-colors group">
+                        <td className="px-6 py-4 font-bold text-indigo-600 text-sm group-hover:text-indigo-700 transition-colors">
+                          #{parcel._id?.slice(-8).toUpperCase()}
+                        </td>
+                        <td className="px-6 py-4 text-slate-600 text-sm font-medium">
+                          {parcel.deliveryAddress || "Not specified"}
+                        </td>
+                        <td className="px-6 py-4">
+                          <span className={`inline-flex items-center px-3 py-1 rounded-full text-xs font-extrabold uppercase tracking-wide border ${
+                            parcel.deliveryStatus?.toLowerCase() === "delivered" ? "bg-emerald-50 text-emerald-600 border-emerald-100" :
+                            parcel.deliveryStatus?.toLowerCase() === "in transit" ? "bg-amber-50 text-amber-600 border-amber-100" :
+                            "bg-rose-50 text-rose-600 border-rose-100"
+                          }`}>
+                            {parcel.deliveryStatus || "Pending"}
+                          </span>
+                        </td>
+                        <td className="px-6 py-4">
+                          {/* পেমেন্ট এপিআই ম্যাপিং কন্ডিশন */}
+                          {payments.some((pay) => pay.parcelId === parcel._id) || parcel.paymentStatus?.toLowerCase() === "paid" ? (
+                            <span className="text-xs font-bold text-emerald-600 bg-emerald-50 px-2.5 py-1 rounded-md border border-emerald-100">Paid</span>
+                          ) : (
+                            <span className="text-xs font-bold text-slate-400 bg-slate-50 px-2.5 py-1 rounded-md border border-slate-100">Unpaid</span>
+                          )}
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              )}
             </div>
           </div>
         </div>
@@ -120,7 +190,6 @@ const UserDashboard = () => {
               </div>
             </div>
             
-            {/* Background Icon Decoration */}
             <div className="absolute -right-6 -bottom-6 text-white/5 text-9xl transform group-hover:scale-110 transition-transform duration-500 pointer-events-none">
               <FaMapMarkerAlt />
             </div>
