@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 import useAuth from "../../../hooks/useAuth";
 import { toast } from "react-toastify";
@@ -6,9 +6,10 @@ import { Link, useLocation, useNavigate } from "react-router";
 import SocialLogin from "../SocialLogin/SocialLogin";
 import axios from "axios";
 import useAxiosSecure from "../../../hooks/useAxiosSecure";
-import { FiUser, FiMail, FiLock, FiCamera, FiArrowRight } from "react-icons/fi";
+import { FiUser, FiMail, FiLock, FiCamera, FiArrowRight, FiEye, FiEyeOff } from "react-icons/fi";
 
 const Register = () => {
+  const [showPassword, setShowPassword] = useState(false);
   const {
     register,
     handleSubmit,
@@ -92,7 +93,7 @@ const Register = () => {
               )}
             </div>
 
-            {/* Photo Field */}
+            {/* Photo Field (Fixed Bug Here) */}
             <div className="space-y-1">
               <label className="text-sm font-bold text-slate-700 ml-1">Profile Photo</label>
               <div className="relative group">
@@ -102,7 +103,7 @@ const Register = () => {
                 <input
                   type="file"
                   {...register("photo", { required: "Photo is required" })}
-                  className="w-full pl-11 pr-4 py-2 bg-slate-50 border border-slate-200 rounded-2xl file:mr-4 file:py-1 file:px-3 file:rounded-full file:border-0 file:text-xs file:font-bold file:bg-indigo-100 file:text-indigo-700 hover:file:bg-indigo-200 cursor-pointer"
+                  className="w-full pl-11 pr-4 py-2 bg-slate-50 border border-slate-200 rounded-2xl file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-indigo-100 file:text-indigo-700 hover:file:bg-indigo-200 cursor-pointer"
                 />
               </div>
               {errors.photo && (
@@ -129,7 +130,7 @@ const Register = () => {
               )}
             </div>
 
-            {/* Password Field */}
+            {/* Password Field with Toggle */}
             <div className="space-y-1">
               <label className="text-sm font-bold text-slate-700 ml-1">Password</label>
               <div className="relative group">
@@ -137,7 +138,7 @@ const Register = () => {
                   <FiLock />
                 </span>
                 <input
-                  type="password"
+                  type={showPassword ? "text" : "password"}
                   {...register("password", {
                     required: "Password is required",
                     minLength: { value: 6, message: "At least 6 characters" },
@@ -146,9 +147,16 @@ const Register = () => {
                       message: "Must include Uppercase, Lowercase, Number & Special Character",
                     },
                   })}
-                  className="w-full pl-11 pr-4 py-3 bg-slate-50 border border-slate-200 rounded-2xl outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 transition-all"
+                  className="w-full pl-11 pr-12 py-3 bg-slate-50 border border-slate-200 rounded-2xl outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 transition-all"
                   placeholder="••••••••"
                 />
+                <button
+                  type="button"
+                  onClick={() => setShowPassword(!showPassword)}
+                  className="absolute inset-y-0 right-0 pr-4 flex items-center text-slate-400 hover:text-indigo-600 transition-colors"
+                >
+                  {showPassword ? <FiEyeOff /> : <FiEye />}
+                </button>
               </div>
               {errors.password && (
                 <p className="text-[10px] md:text-xs text-red-500 mt-1 leading-tight ml-1 font-medium">
@@ -158,7 +166,7 @@ const Register = () => {
             </div>
 
             {/* Submit Button */}
-            <button className="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-4 rounded-2xl shadow-lg shadow-indigo-100 flex items-center justify-center gap-2 group transition-all active:scale-[0.98] mt-4">
+            <button type="submit" className="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-4 rounded-2xl shadow-lg shadow-indigo-100 flex items-center justify-center gap-2 group transition-all active:scale-[0.98] mt-4">
               Create Account
               <FiArrowRight className="group-hover:translate-x-1 transition-transform" />
             </button>

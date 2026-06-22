@@ -1,12 +1,13 @@
-import React from "react";
+import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 import useAuth from "../../../hooks/useAuth";
 import { toast } from "react-toastify";
 import { Link, useLocation, useNavigate } from "react-router";
 import SocialLogin from "../SocialLogin/SocialLogin";
-import { FiMail, FiLock, FiArrowRight } from "react-icons/fi"; // Icons for professional look
+import { FiMail, FiLock, FiArrowRight, FiEye, FiEyeOff } from "react-icons/fi"; // FiEye এবং FiEyeOff ইম্পোর্ট করা হলো
 
 const Login = () => {
+  const [showPassword, setShowPassword] = useState(false); // পাসওয়ার্ড স্টেটের জন্য ভ্যারিয়েবল
   const location = useLocation();
   const navigate = useNavigate();
   const { signInUser } = useAuth();
@@ -79,14 +80,22 @@ const Login = () => {
                   <FiLock />
                 </span>
                 <input
-                  type="password"
+                  type={showPassword ? "text" : "password"} // স্টেট অনুযায়ী টাইপ পরিবর্তন
                   {...register("password", {
                     required: "Password is required",
                     minLength: { value: 6, message: "Password must be at least 6 characters" },
                   })}
-                  className={`w-full pl-11 pr-4 py-3.5 bg-slate-50 border ${errors.password ? "border-red-400" : "border-slate-200"} rounded-2xl outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 transition-all font-medium text-slate-700`}
+                  className={`w-full pl-11 pr-12 py-3.5 bg-slate-50 border ${errors.password ? "border-red-400" : "border-slate-200"} rounded-2xl outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 transition-all font-medium text-slate-700`}
                   placeholder="••••••••"
                 />
+                {/* Toggle Button */}
+                <button
+                  type="button"
+                  onClick={() => setShowPassword(!showPassword)}
+                  className="absolute inset-y-0 right-0 pr-4 flex items-center text-slate-400 hover:text-indigo-600 transition-colors"
+                >
+                  {showPassword ? <FiEyeOff /> : <FiEye />}
+                </button>
               </div>
               {errors.password && (
                 <p className="text-xs text-red-500 font-semibold ml-1">{errors.password.message}</p>
